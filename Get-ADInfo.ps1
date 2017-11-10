@@ -1,14 +1,19 @@
-﻿param(
-    [string]$UserID
+param (
+    [string]$SearchString = "*"
 )
-$UserData = Get-ADuser -Identity $UserID -Properties *
-$UserGroup = Get-ADPrincipalGroupMembership -Identity $UserID | Select-Object Name
+$Users = Get-ADUser -Filter $SearchString -Properties Samaccountname
+$UserArray = @()
+ForEach($item in $Users){
+    $UserData = Get-ADUser -Identity $Users -Properties *
+    $UserGroup = Get-ADPrincipalGroupMembership -Identity $UserData.SamAccountName | Select-Object Name
+    $UserAccount = $UserData.SamAccountName
+    $Name = $UserData.Name
+    $Active = $UserData.Enabled
+    $LastLogon = $UserData.LastLogonDate
+    $UserCreated = $UserData.whenCreated
+    $Group = $UserGroup | Out-String
+    $UserArray += @($Name, $Active, $LastLogon, $UserCreated, $Group)
+}
 
-$UserAccount = $UserData.SamAccountName
-$Name = $UserData.Name
-$Active = $UserData.Enabled
-$LastLogon = $UserData.LastLogonDate
-$UserCreated = $UserData.whenCreated
-
-Write-Host $UserAccount, $Name, $Active, $LastLogon, $UserCreated
-Write-Host $UserGroup
+Write-Host $UserArray
+Out-File -FilePath "ADInfo.txt" -InputObject $UserArray
