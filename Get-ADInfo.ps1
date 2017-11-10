@@ -1,7 +1,6 @@
 ﻿param(
     [string]$UserID
 )
-$UserID = "tulibarri"
 $UserData = Get-ADuser -Identity $UserID -Properties *
 $UserGroup = Get-ADPrincipalGroupMembership -Identity $UserID | Select-Object Name
 
