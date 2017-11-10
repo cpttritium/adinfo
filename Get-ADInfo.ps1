@@ -9,6 +9,7 @@ $UserAccount = $UserData.SamAccountName
 $Name = $UserData.Name
 $Active = $UserData.Enabled
 $LastLogon = $UserData.LastLogonDate
+$UserCreated = $UserData.whenCreated
 
-Write-Host $UserAccount, $Name, $Active, $LastLogon
+Write-Host $UserAccount, $Name, $Active, $LastLogon, $UserCreated
 Write-Host $UserGroup
